@@ -1,0 +1,43 @@
+<h1>GraphBuilder</h1>
+<h3>This page will generate a graph of fruits from a csv file</h3>
+<p>You can use this as an example: <a href="https://github.com/carolinesalib/csv_graph/blob/master/test.csv" target="_blank">link</a></p>
+
+<%= form_tag(graph_builder_index_path, method: "get") do %>
+  <%= label_tag(:file, "CSV fruit file:") %>
+  <%= file_field_tag(:file) %>
+  <%= submit_tag("Generate graph") %>
+<% end %>
+
+<% if @labels.present? %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+  <canvas id="myChart" width="200px" height="200px" ></canvas>
+  <script>
+      var ctx = document.getElementById("myChart").getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+              labels: <%= raw @labels.to_json %>,
+              datasets: [{
+                  label: '# of Votes',
+                  data: <%= @data.to_json %>,
+                  "backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              responsive: true,
+              legend: {
+                  position: 'top',
+              },
+              title: {
+                  display: true,
+                  text: 'Chart.js Doughnut Chart'
+              },
+              animation: {
+                  animateScale: true,
+                  animateRotate: true
+              }
+          }
+      });
+  </script>
+<% end %>
